@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "895718923485",
+    "project_id": "streams-of-thoughts",
+    "storage_bucket": "streams-of-thoughts.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:895718923485:android:c974f53331e9f7651c8f34",
+        "android_client_info": {
+          "package_name": "com.example.streams_of_thoughts"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "895718923485-0jvg2hpb5b0dfuen1kfarek1je0cd97g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-H0EaZd5HzzrNKBY7ap42g0BeNPMkXxY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "895718923485-0jvg2hpb5b0dfuen1kfarek1je0cd97g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
