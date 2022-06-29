@@ -1,11 +1,12 @@
 //Aida Mumin
 //CSC 4360 - Umoja
-//June 22, 2022
+//June 27, 2022
 //Streams of Thoughts
 
 import 'package:streams_of_thoughts/pages/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:streams_of_thoughts/pages/home.dart';
 
 class Loading extends StatelessWidget {
   const Loading({Key? key}) : super(key: key);
@@ -14,7 +15,6 @@ class Loading extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(child: CircularProgressIndicator());
   }
-
 }
 
 Future<void> main() async {
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: Auth());
+      home: Home());
   }
 }
 
