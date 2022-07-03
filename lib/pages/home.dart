@@ -9,7 +9,6 @@ import 'package:streams_of_thoughts/model/post.dart';
 import 'package:streams_of_thoughts/model/user.dart' as m;
 import 'package:flutter/material.dart';
 
-import '../style/style.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -72,6 +71,18 @@ class _HomeState extends State<Home> {
           stream: _postStream,
           builder: 
             (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshots){
+              if(snapshots.hasError){
+                return Center(child: Text("An Error has occurred"));
+              } else if (snapshots.hasData){
+                for(var post in snapshots.data!.docs){
+                  _posts.add(Post.fromJson(post.id, post.data() as Map<String, dynamic>));
+                }
+                return _posts.isEmpty
+                ? const Center(child: Text("No Post Yet"))
+                : ListView.builder( 
+                  itemBuilder: (BuildContext context, int index) => 
+                  ListTile(title: Text(_posts[index].content)));
+              }
               return Center(child: Text("This is Something"));
             },
     ));
