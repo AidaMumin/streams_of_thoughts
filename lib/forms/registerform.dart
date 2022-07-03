@@ -6,6 +6,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:streams_of_thoughts/pages/auth.dart';
+import 'package:streams_of_thoughts/pages/home.dart';
 import 'package:streams_of_thoughts/style/style.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -88,6 +90,14 @@ class _RegisterFormState extends State<RegisterForm> {
                 });
               },
               child: const Text("SIGN UP")),
+          OutlinedButton(
+              onPressed: () {
+                setState(() {
+                  loading = true;
+                  moveToLogin();
+                });
+              },
+              child: const Text("LOGIN")),
         ],
       ),
     );
@@ -108,10 +118,9 @@ class _RegisterFormState extends State<RegisterForm> {
               "Verified": false,
               "Created": Timestamp.now()
             })
-            .then(
-                (value) => snackBar(context, "Welcome to the Site, new user!"))
-            .catchError(
-                (error) => snackBar(context, "Failed to add user: $error"));
+            .then((value) => snackBar(context, "Welcome to the Site, new user!"))
+            .then((value) => moveToHome())
+            .catchError((error) => snackBar(context, "Failed to add user: $error"));
 
         responseR.user!.sendEmailVerification();
         setState(() {
@@ -124,5 +133,13 @@ class _RegisterFormState extends State<RegisterForm> {
         });
       }
     }
+  }
+
+  Future<void> moveToHome() async{
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Home()));
+  }
+
+  Future<void> moveToLogin() async{
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Auth()));
   }
 }

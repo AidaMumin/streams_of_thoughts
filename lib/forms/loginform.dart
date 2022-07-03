@@ -6,7 +6,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:streams_of_thoughts/forms/registerform.dart';
 import 'package:streams_of_thoughts/main.dart';
+import 'package:streams_of_thoughts/pages/auth_2.dart';
 
 import 'package:streams_of_thoughts/style/style.dart';
 
@@ -70,6 +72,13 @@ class _LoginFormState extends State<LoginForm> {
                 OutlinedButton(
                     onPressed: () {
                       setState(() {
+                        moveToRegister();
+                      });
+                    },
+                    child: const Text("SIGN UP")),
+                OutlinedButton(
+                    onPressed: () {
+                      setState(() {
                         forgot();
                       });
                     },
@@ -110,5 +119,9 @@ class _LoginFormState extends State<LoginForm> {
       _auth.sendPasswordResetEmail(email: _email.text);
       snackBar(context, "Reset Password has been sent to your email");
     }
+  }
+
+  Future<void> moveToRegister() async{
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Auth_2()));
   }
 }

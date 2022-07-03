@@ -6,6 +6,7 @@
 import 'package:streams_of_thoughts/pages/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:streams_of_thoughts/pages/driver.dart';
 import 'package:streams_of_thoughts/pages/home.dart';
 
 class Loading extends StatelessWidget {
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: Home());
+      home: const Auth());
   }
 }
 
