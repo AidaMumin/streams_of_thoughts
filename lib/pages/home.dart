@@ -27,37 +27,8 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    getList();
-    getStreamList();
-
+    
     _postStream = _db.collection("posts").snapshots();
-  }
-
-  void getStreamList() {
-    _db.collection("users").snapshots().listen((snapshots) {
-      for (var element in snapshots.docs) {
-        setState(() {
-          users.add(m.User.fromJson(element.id, element.data()));
-        });
-      }
-    });
-  }
-
-  void getList() {
-    _db.collection("users").get().then((result) {
-      setState(() {
-        for (var element in result.docs) {
-          users.add(element.data()["name"]);
-        }
-      });
-    });
-  }
-
-  void getList2() async {
-    var result = await _db.collection("users").get();
-    for (var element in result.docs) {
-      users.add(element.data()["name"]);
-    }
   }
 
   @override
@@ -66,6 +37,8 @@ class _HomeState extends State<Home> {
         appBar: AppBar(
           title: Text("Home"),
         ),
+        floatingActionButton: FloatingActionButton(onPressed: _showPostField,
+        child: const Icon(Icons.post_add)),
         body: StreamBuilder(
           stream: _postStream,
           builder: 
@@ -85,5 +58,8 @@ class _HomeState extends State<Home> {
               return Center(child: Text("This is Something"));
             },
     ));
+  }
+
+  void _showPostField() {
   }
 }
