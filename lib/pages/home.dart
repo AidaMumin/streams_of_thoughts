@@ -4,9 +4,10 @@
 //Streams of Thoughts
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
+import 'package:streams_of_thoughts/main.dart';
 import 'package:streams_of_thoughts/model/post.dart';
-import 'package:streams_of_thoughts/model/user.dart' as m;
+import 'package:streams_of_thoughts/model/user.dart';
 import 'package:flutter/material.dart';
 
 
@@ -18,16 +19,16 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final fbAuth.FirebaseAuth _auth = fbAuth.FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   late Stream<QuerySnapshot> _postStream;
   final List<Post> _posts = [];
-  List<m.User> users = [];
+  List<User> users = [];
 
   @override
   void initState() {
     super.initState();
-    
+
     _postStream = _db.collection("posts").snapshots();
   }
 
@@ -44,7 +45,7 @@ class _HomeState extends State<Home> {
           builder: 
             (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshots){
               if(snapshots.hasError){
-                return Center(child: Text("An Error has occurred"));
+                return Center(child: Text(snapshots.error!.toString()));
               } else if (snapshots.hasData){
                 for(var post in snapshots.data!.docs){
                   _posts.add(Post.fromJson(post.id, post.data() as Map<String, dynamic>));
@@ -55,7 +56,7 @@ class _HomeState extends State<Home> {
                   itemBuilder: (BuildContext context, int index) => 
                   ListTile(title: Text(_posts[index].content)));
               }
-              return Center(child: Text("This is Something"));
+              return const Loading();
             },
     ));
   }
