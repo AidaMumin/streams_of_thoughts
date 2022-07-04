@@ -21,7 +21,7 @@ class FirestoreService {
       Stream<List<Post>> get post => _postsController.stream;
       FirestoreService(){
         _db.collection("users").snapshots().listen(_usersUpdated);
-        _db.collection("post").snapshots().listen(_postsUpdated);
+        _db.collection("posts").snapshots().listen(_postsUpdated);
       }
 
       void _usersUpdated(QuerySnapshot<Map<String, dynamic>> snapshot){

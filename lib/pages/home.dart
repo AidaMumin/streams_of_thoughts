@@ -42,6 +42,7 @@ class _HomeState extends State<Home> {
               return posts.isEmpty
                   ? const Center(child: Text("No Post Yet"))
                   : ListView.builder(
+                    itemCount: posts.length,
                       itemBuilder: (BuildContext context, int index) =>
                           ListTile(
                             title: Text(posts[index].content),
