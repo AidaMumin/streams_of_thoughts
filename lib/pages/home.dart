@@ -33,8 +33,7 @@ class _HomeState extends State<Home> {
             onPressed: _showPostField, child: const Icon(Icons.post_add)),
         body: StreamBuilder<List<Post>>(
           stream: _fs.post,
-          builder:
-              (BuildContext context, AsyncSnapshot<List<Post>> snapshots) {
+          builder: (BuildContext context, AsyncSnapshot<List<Post>> snapshots) {
             if (snapshots.hasError) {
               return Center(child: Text(snapshots.error!.toString()));
             } else if (snapshots.hasData) {
@@ -42,12 +41,18 @@ class _HomeState extends State<Home> {
               return posts.isEmpty
                   ? const Center(child: Text("No Post Yet"))
                   : ListView.builder(
-                    itemCount: posts.length,
+                      itemCount: posts.length,
                       itemBuilder: (BuildContext context, int index) =>
                           ListTile(
-                            title: Text(posts[index].content),
-                            subtitle: Text(posts[index].creator),
-                          ));
+                              title: Text(posts[index].creator),
+                              subtitle: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                Text(posts[index].content),
+                                const SizedBox(height: 10),
+                                Text(posts[index].createdAt.toDate().toString())
+                              ])));
             }
             return const Loading();
           },

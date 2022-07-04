@@ -11,6 +11,7 @@ import 'package:streams_of_thoughts/model/user.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  static Map<String, User> userMap = {};
 
   final StreamController<Map<String, User>> _usersController =
       StreamController<Map<String, User>>();
@@ -35,7 +36,6 @@ class FirestoreService {
       }
 
       Map<String, User> _getUserFromSnapshot(QuerySnapshot<Map<String, dynamic>> snapshot){
-        Map<String, User> userMap = {};
         for(var doc in snapshot.docs){
           User user = User.fromJson(doc.id, doc.data());
           userMap[user.id] = user;
