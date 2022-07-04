@@ -1,13 +1,14 @@
 //Aida Mumin
 //CSC 4360 - Umoja
-//July 3, 2022
+//July 4, 2022
 //Streams of Thoughts
 
-/*import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:streams_of_thoughts/services/firestore_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:streams_of_thoughts/model/post.dart';
+import 'package:streams_of_thoughts/widgets/loading.dart';
 
 class PostForm extends StatefulWidget {
   const PostForm({Key? key}) : super(key: key);
@@ -17,9 +18,10 @@ class PostForm extends StatefulWidget {
 }
 
 class _PostFormState extends State<PostForm> {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirestoreService _fs = FirestoreService();
   final TextEditingController _content = TextEditingController();
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseFirestore _db = FirebaseFirestore.instance;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -42,9 +44,13 @@ class _PostFormState extends State<PostForm> {
   }
 
   void _submitPost() {
-    _fs.addPost({
-      "content": _content.text,
-      "creator": _auth.currentUser!.uid
-    }).then((value) => Navigator.of(context).pop());
+    _db.collection("posts").add(Post(
+            id: "",
+            content: _content.text,
+            createdAt: Timestamp.now(),
+            creator: _auth.currentUser!.uid)
+        .toJSON()).then((value) => Navigator.of(context).pop());
+
+    
   }
-}*/
+}
