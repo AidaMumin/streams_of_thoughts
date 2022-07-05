@@ -1,6 +1,6 @@
 //Aida Mumin
 //CSC 4360 - Umoja
-//July 3, 2022
+//July 4, 2022
 //Streams of Thoughts
 
 import 'package:flutter/material.dart';

@@ -3,14 +3,15 @@
 //July 4, 2022
 //Streams of Thoughts
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
+import 'package:streams_of_thoughts/forms/loginform.dart';
 import 'package:streams_of_thoughts/forms/postform.dart';
-import 'package:streams_of_thoughts/main.dart';
 import 'package:streams_of_thoughts/model/post.dart';
-import 'package:streams_of_thoughts/model/user.dart';
-import 'package:flutter/material.dart';
+import 'package:streams_of_thoughts/pages/auth.dart';
+import 'package:streams_of_thoughts/pages/profile.dart';
 import 'package:streams_of_thoughts/service/firestore_service.dart';
+import 'package:streams_of_thoughts/widgets/loading.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
+import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -27,7 +28,13 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Home"),
+          actions: [
+            IconButton(
+              onPressed: (){
+                logout();
+              }, icon: const Icon(Icons.logout)),
+          ],
+          title: const Text("Home"),
         ),
         floatingActionButton: FloatingActionButton(
             onPressed: _showPostField, child: const Icon(Icons.post_add)),
@@ -38,21 +45,41 @@ class _HomeState extends State<Home> {
               return Center(child: Text(snapshots.error!.toString()));
             } else if (snapshots.hasData) {
               var posts = snapshots.data!;
+              var filterpost = [];
+              for(var element in posts){
+                if(element.creator == "SomeId"){
+                  filterpost.add(element);
+                }
+              }
+
               return posts.isEmpty
                   ? const Center(child: Text("No Post Yet"))
                   : ListView.builder(
                       itemCount: posts.length,
                       itemBuilder: (BuildContext context, int index) =>
                           ListTile(
-                              title: Text(posts[index].creator),
+                              title: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Profile(
+                                                observedUser: FirestoreService
+                                                        .userMap[
+                                                    posts[index].creator]!)));
+                                  },
+                                  child: Text(posts[index].creator)),
                               subtitle: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                Text(posts[index].content),
-                                const SizedBox(height: 10),
-                                Text(posts[index].createdAt.toDate().toString())
-                              ])));
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(posts[index].content),
+                                    const SizedBox(height: 10),
+                                    Text(posts[index]
+                                        .createdAt
+                                        .toDate()
+                                        .toString())
+                                  ])));
             }
             return const Loading();
           },
@@ -65,5 +92,15 @@ class _HomeState extends State<Home> {
         builder: (context) {
           return const PostForm();
         });
+  }
+
+  
+  void logout() async {
+    await _auth.signOut();
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (BuildContext context) => const Auth()),
+      ModalRoute.withName('/'),
+    );
   }
 }
