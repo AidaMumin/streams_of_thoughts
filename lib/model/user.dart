@@ -12,7 +12,7 @@ class User {
   User({required this.id, required this.name, required this.bio, this.date});
 
   factory User.fromJson(String id, Map<String, dynamic> data){
-    return User(id: id, name: data["name"], bio: data["bio"]);
+    return User(id: id, name: data["Name"], bio: data["Bio"]);
   }
 
   Map<String,dynamic> toJSON(){

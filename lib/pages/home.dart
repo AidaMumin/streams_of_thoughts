@@ -68,7 +68,7 @@ class _HomeState extends State<Home> {
                                                         .userMap[
                                                     posts[index].creator]!)));
                                   },
-                                  child: Text(posts[index].creator)),
+                                  child: Text(FirestoreService.userMap[posts[index].creator]!.name)),
                               subtitle: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,

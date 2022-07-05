@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -27,7 +28,7 @@
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="favicon.png" />
 
   <title>streams_of_thoughts</title>
   <link rel="manifest" href="manifest.json">
@@ -39,17 +40,18 @@
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
 </head>
+
 <body>
   <script>
-    window.addEventListener('load', function(ev) {
+    window.addEventListener('load', function (ev) {
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
         }
-      }).then(function(engineInitializer) {
+      }).then(function (engineInitializer) {
         return engineInitializer.initializeEngine();
-      }).then(function(appRunner) {
+      }).then(function (appRunner) {
         return appRunner.runApp();
       });
     });
@@ -57,17 +59,19 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script>
     var firebaseConfig = {
-        apiKey: "AIzaSyCjhdft9nOkVyn03gePHM5QeYJ3eis1w0o",
-        authDomain: "streams-of-thoughts.firebaseapp.com",
-        projectId: "streams-of-thoughts",
-        databaseURL: "https://streams-of-thoughts.firebaseio.com",
-        storageBucket: "streams-of-thoughts.appspot.com",
-        messagingSenderId: "895718923485",
-        appId: "1:895718923485:web:f5db1d9137d208fd1c8f34",
-        measurementId: "G-BQ3N259KSL"
-      };
+      apiKey: "AIzaSyCjhdft9nOkVyn03gePHM5QeYJ3eis1w0o",
+      authDomain: "streams-of-thoughts.firebaseapp.com",
+      projectId: "streams-of-thoughts",
+      databaseURL: "https://streams-of-thoughts.firebaseio.com",
+      storageBucket: "streams-of-thoughts.appspot.com",
+      messagingSenderId: "895718923485",
+      appId: "1:895718923485:web:f5db1d9137d208fd1c8f34",
+      measurementId: "G-BQ3N259KSL"
+    };
 
-      firebase.initializeApp(firebaseConfig);
+
+    firebase.initializeApp(firebaseConfig);
   </script>
 </body>
+
 </html>
