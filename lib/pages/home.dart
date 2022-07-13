@@ -1,12 +1,10 @@
 //Aida Mumin
 //CSC 4360 - Umoja
-//July 4, 2022
+//July 15, 2022
 //Streams of Thoughts
 
-import 'package:streams_of_thoughts/forms/loginform.dart';
 import 'package:streams_of_thoughts/forms/postform.dart';
 import 'package:streams_of_thoughts/model/post.dart';
-import 'package:streams_of_thoughts/pages/auth.dart';
 import 'package:streams_of_thoughts/pages/profile.dart';
 import 'package:streams_of_thoughts/service/firestore_service.dart';
 import 'package:streams_of_thoughts/widgets/loading.dart';
@@ -26,12 +24,13 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         appBar: AppBar(
           actions: [
             IconButton(
               onPressed: (){
-                logout();
+                logout(context);
               }, icon: const Icon(Icons.logout)),
           ],
           title: const Text("Home"),
@@ -45,12 +44,6 @@ class _HomeState extends State<Home> {
               return Center(child: Text(snapshots.error!.toString()));
             } else if (snapshots.hasData) {
               var posts = snapshots.data!;
-              var filterpost = [];
-              for(var element in posts){
-                if(element.creator == "SomeId"){
-                  filterpost.add(element);
-                }
-              }
 
               return posts.isEmpty
                   ? const Center(child: Text("No Post Yet"))
@@ -94,13 +87,10 @@ class _HomeState extends State<Home> {
         });
   }
 
+
   
-  void logout() async {
+  void logout(BuildContext context) async {
     await _auth.signOut();
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (BuildContext context) => const Auth()),
-      ModalRoute.withName('/'),
-    );
+    Navigator.of(context).pop();
   }
 }

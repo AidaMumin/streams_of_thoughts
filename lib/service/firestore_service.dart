@@ -10,7 +10,6 @@ import 'package:streams_of_thoughts/model/post.dart';
 import 'package:streams_of_thoughts/model/user.dart';
 
 class FirestoreService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
   static Map<String, User> userMap = {};
   static Map<String, Post> postMap = {};
 
