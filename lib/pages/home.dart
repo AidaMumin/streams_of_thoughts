@@ -1,10 +1,11 @@
 //Aida Mumin
 //CSC 4360 - Umoja
-//July 15, 2022
+//July 25, 2022
 //Streams of Thoughts
 
 import 'package:streams_of_thoughts/forms/postform.dart';
 import 'package:streams_of_thoughts/model/post.dart';
+import 'package:streams_of_thoughts/pages/conversartions.dart';
 import 'package:streams_of_thoughts/pages/profile.dart';
 import 'package:streams_of_thoughts/service/firestore_service.dart';
 import 'package:streams_of_thoughts/widgets/loading.dart';
@@ -28,6 +29,14 @@ class _HomeState extends State<Home> {
     return Scaffold(
         appBar: AppBar(
           actions: [
+            IconButton(
+              onPressed: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ConversationsPage()));
+              }, icon: const Icon(Icons.message)),
+            IconButton(
+              onPressed: (){
+                
+              }, icon: const Icon(Icons.settings)),
             IconButton(
               onPressed: (){
                 logout(context);
