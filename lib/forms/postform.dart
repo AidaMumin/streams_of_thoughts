@@ -24,7 +24,7 @@ class _PostFormState extends State<PostForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SafeArea(child: Padding(
       padding: const EdgeInsets.all(30.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -40,6 +40,7 @@ class _PostFormState extends State<PostForm> {
               onPressed: _submitPost, child: const Text("Submit Post"))
         ],
       ),
+    ),
     );
   }
 

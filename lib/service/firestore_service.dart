@@ -18,6 +18,11 @@ class FirestoreService {
   static Map<String, Post> postMap = {};
 
   final Map<String, Conversation> _conversations = {};
+  final Map<String, Message> _messages = {};
+
+  String getUserId(){
+    return _auth.currentUser!.uid;
+  }
 
   final usersCollection = FirebaseFirestore.instance.collection("users");
   final postsCollection = FirebaseFirestore.instance.collection("posts");
@@ -29,18 +34,18 @@ class FirestoreService {
       StreamController<Map<String, User>>();
   final StreamController<List<Post>> _postsController =
       StreamController<List<Post>>();
-  final StreamController<List<Conversation>> _conversationsController =
-      StreamController<List<Conversation>>();
   final StreamController<List<Conversation>> _userConversationsController =
+      StreamController<List<Conversation>>();
+  final StreamController<List<Conversation>> _conversationsController =
       StreamController<List<Conversation>>();
   final StreamController<List<Message>> _messagesController =
       StreamController<List<Message>>();
 
   Stream<Map<String, User>> get users => _usersController.stream;
   Stream<List<Post>> get post => _postsController.stream;
-
   Stream<List<Conversation>> get userConversations => _userConversationsController.stream;
   Stream<List<Message>> get messages => _messagesController.stream;
+  
 
   FirestoreService() {
     usersCollection.snapshots().listen(_usersUpdated);
@@ -49,8 +54,16 @@ class FirestoreService {
     conversationsCollection.snapshots().listen(_conversationsUpdated);
   }
 
-  void setUserConversation(String userId){
-    userConversationsCollection.doc(userId).snapshots().listen(_userConversationsUpdated);
+  void setUserConversation(){
+    userConversationsCollection.doc(_auth.currentUser!.uid).snapshots().listen(_userConversationsUpdated);
+  }
+
+  void setConvoMessages(String convoId){
+    messagesCollection.where("conversationId", isEqualTo: convoId).snapshots().listen(_messagesUpdated);
+  }
+
+  Stream<List<Message>> convoMessages(){
+    return _messagesController.stream;
   }
 
   void _usersUpdated(QuerySnapshot<Map<String, dynamic>> snapshot) {
@@ -64,13 +77,13 @@ class FirestoreService {
   }
 
   void _messagesUpdated(QuerySnapshot<Map<String, dynamic>> snapshot) {
-    List<Message> messages = [];
+    List<Message> messages = _getMessagesFromSnapshot(snapshot);
     _messagesController.add(messages);
   }
 
   void _conversationsUpdated(QuerySnapshot<Map<String, dynamic>> snapshot) {
-    _getConversationsFromSnapshot(snapshot);
-    
+    List<Conversation> conversations = _getConversationsFromSnapshot(snapshot);
+    _conversationsController.add(conversations);
   }
 
   void _userConversationsUpdated(DocumentSnapshot<Map<String, dynamic>> snapshot) {
@@ -99,28 +112,77 @@ class FirestoreService {
     return posts;
   }
 
-  void _getConversationsFromSnapshot(
+  List<Message> _getMessagesFromSnapshot(
       QuerySnapshot<Map<String, dynamic>> snapshot) {
+    List<Message> messages = [];
+    for (var doc in snapshot.docs) {
+      Message message = Message.fromJson(doc.id, doc.data());
+      messages.add(message);
+      _messages[message.id] = message;
+    }
+    return messages;
+  }
+
+  List<Conversation> _getConversationsFromSnapshot(
+      QuerySnapshot<Map<String, dynamic>> snapshot) {
+    List<Conversation> conversations = [];
     for (var doc in snapshot.docs) {
       Conversation convo = Conversation.fromJson(doc.id, doc.data());
       _conversations[convo.id] = convo;
+      conversations.add(convo);
     }
+    return conversations;
+  }
+
+  Conversation? getConversationBy(String id){
+    return _conversations[id];
   }
 
   List<Conversation> _getUserConsFromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot){
     List<Conversation> conversations = [];
+    if (snapshot.data() != null) {
+      for (var key in snapshot.data()!.keys) {
+        if(_conversations.containsKey(key)){
+          conversations.add(_conversations[key]!);
+        }
+      }
+    }
 
     return conversations;
   }
 
   Future<bool> addConversation(List<String> users) async{
     users.add(_auth.currentUser!.uid);
-    var data = {"users" : users, "create_at": Timestamp.now()};
+    var data = Conversation(id: "", users: users, createdAt: Timestamp.now());
     try{
-      var result = await conversationsCollection.add(data);
+      var result = await conversationsCollection.add(data.toJSON());
       for(var user in users){
         userConversationsCollection.doc(user).set({result.id : 1}, SetOptions(merge: true));
       }
+      return true;
+    } catch (e){
+      return false;
+    }
+  }
+
+  Future<bool> addMessage(String content, Conversation conversation) async{
+    var data = Message(
+        id: "",
+        content: content,
+        type: 0,
+        conId: conversation.id,
+        fromId: _auth.currentUser!.uid,
+        createdAt: Timestamp.now());
+    try{
+      var result = await messagesCollection.add(data.toJSON());
+      await conversationsCollection
+          .doc(conversation.id)
+          .update(Conversation(
+          id: conversation.id,
+          users: conversation.users,
+          createdAt: conversation.createdAt,
+          lastMessage: result.id
+          ).toJSON());
       return true;
     } catch (e){
       return false;

@@ -20,21 +20,23 @@ class Conversation {
   factory Conversation.fromJson(String id, Map<String, dynamic> data) {
     List<String> users = [];
     if (data["users"] != null){
-      var userData = data["users"] as List<String>;
-      users = userData;
+      var userData = data["users"] as List<dynamic>;
+      for(var user in userData){
+        users.add(user as String);
+      }
     }
 
     return Conversation(
         id: id,
         users: users,
-        createdAt: data["createdAt"],
+        createdAt: data["create_at"],
         lastMessage: data["lastMessage"]);
   }
 
   Map<String, dynamic> toJSON() {
     return {
-      "content": users, 
-      "createdAt": createdAt, 
+      "users": users, 
+      "create_at": createdAt, 
       "lastMessage": lastMessage};
   }
 }
