@@ -16,10 +16,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
-  firebase_core: ^1.18.0
-  firebase_auth: ^3.3.20
   cloud_firestore: ^3.1.18
+  cupertino_icons: ^1.0.2
+  firebase_auth: ^3.3.20
+  firebase_core: ^1.18.0
+  flutter_rating_bar: ^4.0.1
+  path: ^1.8.1
+  sqflite: ^2.0.3
 
 dev_dependencies:
   flutter_test:

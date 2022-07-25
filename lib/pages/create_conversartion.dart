@@ -24,7 +24,11 @@ class _CreateState extends State<CreateConversationsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Create Messages"),
-        actions: recipients.isEmpty ? [] : [IconButton(onPressed: createConversation, icon: const Icon(Icons.create))],
+        actions: recipients.isEmpty ? [] : [
+          IconButton(
+            onPressed: createConversation, 
+            icon: const Icon(Icons.create))
+          ],
       ),
       body: ListView.builder(
           itemCount: userList.length,

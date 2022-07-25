@@ -4,6 +4,7 @@
 //Streams of Thoughts
 
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:streams_of_thoughts/model/conversation.dart';
 import 'package:streams_of_thoughts/model/message.dart';
 import 'package:streams_of_thoughts/service/firestore_service.dart';
@@ -17,15 +18,24 @@ class ChatPage extends StatelessWidget {
   final TextEditingController _message = TextEditingController();
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(name)),
+      appBar: AppBar(
+          title: Column(children: [
+        Text(name),
+        RatingBar.builder(
+          itemCount: 5,
+          onRatingUpdate: (value) {},
+          itemBuilder: (BuildContext context, int index) {
+            return const Icon(Icons.star, color: Colors.cyan
+            );
+          },
+        ),
+      ])
+      ),
       body: SafeArea(
           child: Column(
-        children: [
-          _messagingArea(context),
-          _inputArea(context)
-          ],
+        children: [_messagingArea(context), _inputArea(context)],
       )),
     );
   }

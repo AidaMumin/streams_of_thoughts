@@ -16,6 +16,8 @@ class FirestoreService {
   final fba.FirebaseAuth _auth = fba.FirebaseAuth.instance;
   static Map<String, User> userMap = {};
   static Map<String, Post> postMap = {};
+  static Map<String, Conversation> convoMap = {};
+  static Map<String, double> rating = {};
 
   final Map<String, Conversation> _conversations = {};
   final Map<String, Message> _messages = {};
@@ -91,6 +93,14 @@ class FirestoreService {
    _userConversationsController.add(userConversation);
   }
 
+  void _ratingUpdated(String convoId, double rate){
+    if(rating.containsKey(convoId)){
+      rating[convoId] = (rate + rating[convoId]!)/2;
+    } else {
+      rating[convoId] = rate;
+    }
+  }
+
   Map<String, User> _getUserFromSnapshot(
       QuerySnapshot<Map<String, dynamic>> snapshot) {
     for (var doc in snapshot.docs) {
@@ -129,6 +139,7 @@ class FirestoreService {
     for (var doc in snapshot.docs) {
       Conversation convo = Conversation.fromJson(doc.id, doc.data());
       _conversations[convo.id] = convo;
+      convoMap[convo.id] = convo;
       conversations.add(convo);
     }
     return conversations;
@@ -155,7 +166,9 @@ class FirestoreService {
     users.add(_auth.currentUser!.uid);
     var data = Conversation(id: "", users: users, createdAt: Timestamp.now());
     try{
+      print(users);
       var result = await conversationsCollection.add(data.toJSON());
+      print(users);
       for(var user in users){
         userConversationsCollection.doc(user).set({result.id : 1}, SetOptions(merge: true));
       }
