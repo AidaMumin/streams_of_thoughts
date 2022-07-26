@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:streams_of_thoughts/model/conversation.dart';
 import 'package:streams_of_thoughts/pages/chat.dart';
 import 'package:streams_of_thoughts/pages/create_conversartion.dart';
-import 'package:streams_of_thoughts/pages/search.dart';
 import 'package:streams_of_thoughts/service/firestore_service.dart';
 
 class ConversationsPage extends StatefulWidget {
@@ -32,12 +31,6 @@ class _ConversationsState extends State<ConversationsPage>{
           IconButton(onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CreateConversationsPage()));
           }, icon: const Icon(Icons.add)),
-          IconButton(onPressed: () {
-            showSearch(
-              context: context,
-              delegate: searchingDelegate()
-              );
-          }, icon: const Icon(Icons.search)),
         ],
       ),
       body: StreamBuilder<List<Conversation>>(

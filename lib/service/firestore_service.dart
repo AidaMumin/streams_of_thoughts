@@ -17,7 +17,7 @@ class FirestoreService {
   static Map<String, User> userMap = {};
   static Map<String, Post> postMap = {};
   static Map<String, Conversation> convoMap = {};
-  static Map<String, double> rating = {};
+
 
   final Map<String, Conversation> _conversations = {};
   final Map<String, Message> _messages = {};
@@ -93,13 +93,7 @@ class FirestoreService {
    _userConversationsController.add(userConversation);
   }
 
-  void _ratingUpdated(String convoId, double rate){
-    if(rating.containsKey(convoId)){
-      rating[convoId] = (rate + rating[convoId]!)/2;
-    } else {
-      rating[convoId] = rate;
-    }
-  }
+
 
   Map<String, User> _getUserFromSnapshot(
       QuerySnapshot<Map<String, dynamic>> snapshot) {

@@ -95,14 +95,9 @@ class _LoginFormState extends State<LoginForm> {
             email: _email.text, password: _password.text);
 
         setState(() {
-          if (responseL.user!.emailVerified) {
             snackBar(context, "Welcome back, user!");
             Navigator.push(context,
                 MaterialPageRoute(builder: (BuildContext context) => Home()));
-          } else {
-            snackBar(context, "User logged in, but email was not verified");
-            responseL.user!.sendEmailVerification();
-          }
           loading = false;
         });
       } catch (e) {

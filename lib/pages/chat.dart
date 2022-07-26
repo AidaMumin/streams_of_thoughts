@@ -5,9 +5,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:path/path.dart';
 import 'package:streams_of_thoughts/model/conversation.dart';
 import 'package:streams_of_thoughts/model/message.dart';
 import 'package:streams_of_thoughts/service/firestore_service.dart';
+import 'package:intl/intl.dart';
 import 'package:streams_of_thoughts/style/style.dart';
 
 class ChatPage extends StatelessWidget {
@@ -16,23 +18,30 @@ class ChatPage extends StatelessWidget {
   final String name;
   final FirestoreService _fs = FirestoreService();
   final TextEditingController _message = TextEditingController();
+  static Map<String, double> rating = {};
+  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: Column(children: [
-        Text(name),
-        RatingBar.builder(
+      drawer: Drawer(
+        child: RatingBar.builder(
           itemCount: 5,
-          onRatingUpdate: (value) {},
+          allowHalfRating: true,
+          onRatingUpdate: (value) {
+            _ratingUpdated(conversation.id, value);
+          },
+          initialRating: rating.isEmpty ? 0 : rating[conversation.id]!,
           itemBuilder: (BuildContext context, int index) {
-            return const Icon(Icons.star, color: Colors.cyan
-            );
+            return const Icon(Icons.star, color: Colors.cyan);
           },
         ),
-      ])
       ),
+      appBar: AppBar(
+          title: Text(name),
+          actions: [TextButton(
+            onPressed: () => Navigator.of(context).pop(), 
+            child: const Text("Close", style: TextStyle(color: Colors.white)))],),
       body: SafeArea(
           child: Column(
         children: [_messagingArea(context), _inputArea(context)],
@@ -50,23 +59,45 @@ class ChatPage extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   List<Message> messages = [];
-                  for(var message in snapshot.data!){
-                    if(message.conId == conversation.id){
+                  for (var message in snapshot.data!) {
+                    if (message.conId == conversation.id) {
                       messages.add(message);
                     }
                   }
                   return ListView.builder(
-                    itemCount: messages.length,
-                    itemBuilder: (context, index) {
-                    bool me = messages[index].fromId == _fs.getUserId();
-                    return Container(
-                        color: me ? Colors.amberAccent : Colors.cyan,
-                        child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Text(
-                                messages[index].content,
-                                textAlign:me ? TextAlign.right : TextAlign.left)));
-                  });
+                      itemCount: messages.length,
+                      itemBuilder: (context, index) {
+                        bool me = messages[index].fromId == _fs.getUserId();
+                        return Container(
+                            color: me ? Colors.amberAccent : Colors.cyanAccent,
+                            child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Column(
+                                  crossAxisAlignment: me ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                                  children:[
+                                      Text(
+                                          FirestoreService
+                                              .userMap[messages[index].fromId]!
+                                              .name,
+                                          textAlign: me
+                                              ? TextAlign.right
+                                              : TextAlign.left,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold)),     
+                                      Text(messages[index].content,
+                                          textAlign: me
+                                              ? TextAlign.right
+                                              : TextAlign.left),
+                                      Text(
+                                          DateFormat('MM/dd/yyyy hh:MM a')
+                                              .format(messages[index]
+                                                  .createdAt
+                                                  .toDate()),
+                                          textAlign: me
+                                              ? TextAlign.right
+                                              : TextAlign.left)
+                                    ])));
+                      });
                 } else {
                   return const Center(child: Text("No Messages yet"));
                 }
@@ -90,6 +121,14 @@ class ChatPage extends StatelessWidget {
     if(_message.text.isNotEmpty){
       _fs.addMessage(_message.text, conversation);
       _message.clear();
+    }
+  }
+
+  void _ratingUpdated(String convoId, double rate) {
+    if (rating.containsKey(convoId)) {
+      rating[convoId] = (rate + rating[convoId]!) / 2;
+    } else {
+      rating[convoId] = rate;
     }
   }
 }
