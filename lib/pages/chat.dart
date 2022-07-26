@@ -31,7 +31,7 @@ class ChatPage extends StatelessWidget {
           onRatingUpdate: (value) {
             _ratingUpdated(conversation.id, value);
           },
-          initialRating: rating.isEmpty ? 0 : rating[conversation.id]!,
+          initialRating: rating.containsKey(conversation.id) ? rating[conversation.id]! : 0.0 ,
           itemBuilder: (BuildContext context, int index) {
             return const Icon(Icons.star, color: Colors.cyan);
           },
