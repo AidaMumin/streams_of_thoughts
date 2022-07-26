@@ -35,10 +35,6 @@ class _HomeState extends State<Home> {
               }, icon: const Icon(Icons.message)),
             IconButton(
               onPressed: (){
-                
-              }, icon: const Icon(Icons.settings)),
-            IconButton(
-              onPressed: (){
                 logout(context);
               }, icon: const Icon(Icons.logout)),
           ],
